@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Visibility Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="background-glob"></div>
+
+    <!-- Upload Screen -->
+    <div class="container" id="upload-screen">
+      <div class="upload-card">
+        <img src="./AEO Branding-02.png" alt="Logo" class="upload-logo" />
+        <h1>AI Visibility Dashboard</h1>
+          Upload your CSV report to view the premium dashboard.
+          <br>
+          <span style="font-size: 0.9em; opacity: 0.8; display: block; margin-top: 0.5rem">(Drag & Drop supported)</span>
+        </p>
+
+        <label for="csvFileInput" class="custom-file-upload">
+          Select CSV File
+        </label>
+        <input type="file" id="csvFileInput" accept=".csv" />
+
+        <div id="error-message" class="error-message"></div>
+      </div>
+    </div>
+
+    <!-- Dashboard Screen (Hidden by default) -->
+    <div class="container hidden" id="dashboard-container">
+      <header id="dashboard-header">
+        <!-- Content will be injected by JS -->
+      </header>
+
+      <main id="dashboard-content">
+        <!-- Content -->
+      </main>
+
+      <div style="text-align: center; margin-top: 2rem">
+        <button id="reset-btn" class="secondary-button">
+          Upload Another Report
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
