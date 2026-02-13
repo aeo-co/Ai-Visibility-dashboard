@@ -772,6 +772,18 @@ function renderQueries(allRows, colMap, container) {
       queryContent.appendChild(urlSection);
     }
 
+    // Competitor Analysis Section
+    const competitorAnalysis = getRowVal(colMap.competitorAnalysis, "");
+    if (competitorAnalysis && competitorAnalysis.length > 0) {
+      const analysisSection = document.createElement("div");
+      analysisSection.className = "section competitor-analysis-section";
+      analysisSection.innerHTML = `
+        <div class="section-title">🎯 Competitor Analysis</div>
+        <div class="competitor-analysis-content">${formatCompetitorAnalysis(escapeHTML(competitorAnalysis))}</div>
+      `;
+      queryContent.appendChild(analysisSection);
+    }
+
     queryHeader.onclick = () => {
       const isExpanded = queryContent.style.display !== "none";
       queryContent.style.display = isExpanded ? "none" : "block";
@@ -918,6 +930,28 @@ function extractAllUrls(urlsString, sourcesString) {
   });
 
   return Array.from(urls);
+}
+
+function formatCompetitorAnalysis(text) {
+  if (!text) return "";
+
+  // Split into sentences for better readability
+  const sentences = text.split(/(?<=\.)\s+/);
+
+  if (sentences.length <= 2) {
+    return `<p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem;">${text}</p>`;
+  }
+
+  // First sentence as the summary/headline
+  const headline = sentences[0];
+  const rest = sentences.slice(1).join(" ");
+
+  return `
+    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+      <p style="color: var(--accent-color); font-weight: 600; line-height: 1.6; font-size: 1rem;">${headline}</p>
+    </div>
+    <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem;">${rest}</p>
+  `;
 }
 
 function escapeHTML(str) {

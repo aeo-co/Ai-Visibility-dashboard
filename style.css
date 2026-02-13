@@ -238,6 +238,34 @@ h3 {
 }
 
 
+/* Competitor Analysis */
+.competitor-analysis-section {
+    background: linear-gradient(135deg, rgba(128, 228, 138, 0.08) 0%, rgba(20, 40, 20, 0.9) 100%);
+    border-left: 3px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.competitor-analysis-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(128, 228, 138, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.competitor-analysis-section:hover {
+    border-left-color: #a0f0aa;
+    box-shadow: 0 0 25px rgba(128, 228, 138, 0.15);
+}
+
+.competitor-analysis-content {
+    position: relative;
+    z-index: 1;
+}
 
 /* Utilities */
 .hidden {
