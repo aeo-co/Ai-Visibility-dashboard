@@ -67,6 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const text = event.target.result;
         const data = parseCSV(text);
 
+        const fileName = file.name;
+        const fileNameParts = fileName.split(" - ");
+        const wordBetweenFirstAndSecond = fileNameParts[1] || "ChatGPT";
+
         if (data.length < 2) {
           throw new Error("CSV is empty or invalid format.");
         }
@@ -87,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         globalData = allRows;
         globalColMap = colMap;
 
-        renderDashboard(allRows, colMap);
+        renderDashboard(allRows, colMap, wordBetweenFirstAndSecond);
         showDashboard();
       } catch (error) {
         errorMessage.textContent = `Error: ${error.message}`;
@@ -298,7 +302,7 @@ function createInsightsDashboard(allRows, colMap) {
   return insights;
 }
 
-function renderDashboard(allRows, colMap) {
+function renderDashboard(allRows, colMap, wordBetweenFirstAndSecond) {
   const headerEl = document.getElementById("dashboard-header");
   const contentEl = document.getElementById("dashboard-content");
 
@@ -322,7 +326,7 @@ function renderDashboard(allRows, colMap) {
 
   headerEl.innerHTML = `
     <img src="./AEO Branding-02.png" alt="AEO Branding" class="centered-logo" style="margin-bottom: 1rem; margin-top: 0; width: 100px;">
-    <h2>ChatGPT - AI Visibility Query Performance</h2>
+    <h2>${wordBetweenFirstAndSecond} - AI Visibility Query Performance</h2>
     <div class="brand-name">${escapeHTML(mainBrand)}</div>
     <h1 title="Average AI Visibility Score">${insights.avgScore}%</h1>
     <div style="display: inline-block; padding: 0.5rem 1.5rem; background: ${scoreBadge.bg}; color: ${scoreBadge.color}; border-radius: 50px; font-weight: 600; margin-bottom: 2rem; border: 1px solid ${scoreBadge.color};">
@@ -365,16 +369,15 @@ function renderDashboard(allRows, colMap) {
         </div>
       </div>
     </div>
-    ${
-      Object.keys(insights.brandFrequency).length > 0
-        ? (() => {
-            const top10Competitors = Object.entries(insights.brandFrequency)
-              .sort((a, b) => b[1] - a[1])
-              .slice(0, 10);
+    ${Object.keys(insights.brandFrequency).length > 0
+      ? (() => {
+        const top10Competitors = Object.entries(insights.brandFrequency)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10);
 
-            const maxMentions = top10Competitors[0][1];
+        const maxMentions = top10Competitors[0][1];
 
-            return `
+        return `
       <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
         <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem;">🏆 Top 10 Most Mentioned Businesses</div>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -400,8 +403,8 @@ function renderDashboard(allRows, colMap) {
         </div>
       </div>
       `;
-          })()
-        : ""
+      })()
+      : ""
     }
   `;
   contentEl.appendChild(insightsSection);
@@ -445,11 +448,11 @@ function renderDashboard(allRows, colMap) {
   // Score Distribution Chart
   // User forced values: Low 30, rest adjusted accordingly
   const scoreRanges = { high: 8, medium: 15, low: 30, none: 0 };
-  
+
   // Real calculation for 'none' or logic check if needed, but we are overriding for visual.
   // We still iterate to count 'none' if we want, or just ignore.
   // Let's just use the hardcoded/adjusted values for the chart.
-  
+
   const totalChartQueries = scoreRanges.high + scoreRanges.medium + scoreRanges.low;
 
   const chartSection = document.createElement("div");
@@ -457,9 +460,8 @@ function renderDashboard(allRows, colMap) {
   chartSection.innerHTML = `
     <div class="section-title">📈 Score Distribution</div>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
-      ${
-        scoreRanges.high > 0
-          ? `
+      ${scoreRanges.high > 0
+      ? `
         <div style="text-align: center; padding: 1rem; background: rgba(128, 228, 138, 0.1); border-radius: 8px; border: 1px solid #80e48a;">
           <div style="font-size: 2rem; font-weight: 700; color: #80e48a;">${scoreRanges.high}</div>
           <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">High (70%+)</div>
@@ -468,11 +470,10 @@ function renderDashboard(allRows, colMap) {
           </div>
         </div>
       `
-          : ""
-      }
-      ${
-        scoreRanges.medium > 0
-          ? `
+      : ""
+    }
+      ${scoreRanges.medium > 0
+      ? `
         <div style="text-align: center; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border: 1px solid #fbbf24;">
           <div style="font-size: 2rem; font-weight: 700; color: #fbbf24;">${scoreRanges.medium}</div>
           <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Medium (40-69%)</div>
@@ -481,11 +482,10 @@ function renderDashboard(allRows, colMap) {
           </div>
         </div>
       `
-          : ""
-      }
-      ${
-        scoreRanges.low > 0
-          ? `
+      : ""
+    }
+      ${scoreRanges.low > 0
+      ? `
         <div style="text-align: center; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border: 1px solid #ef4444;">
           <div style="font-size: 2rem; font-weight: 700; color: #ef4444;">${scoreRanges.low}</div>
           <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Low (<40%)</div>
@@ -494,8 +494,8 @@ function renderDashboard(allRows, colMap) {
           </div>
         </div>
       `
-          : ""
-      }
+      : ""
+    }
     </div>
   `;
   contentEl.appendChild(chartSection);
@@ -916,7 +916,7 @@ function extractAllUrls(urlsString, sourcesString) {
           });
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     str.split(/[,;\n]/).forEach((u) => {
       const trimmed = u.trim();
